@@ -1,30 +1,32 @@
+require('./db');
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
+const PORT = 3000;
 
-// Memuat variabel lingkungan dari .env
 dotenv.config();
 
-const authRoutes = require('./routes/auth');
-const protectedRoutes = require('./routes/protected');
-
 const app = express();
+
+app.listen(PORT, () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+})
 
 // Middleware untuk parsing JSON
 app.use(express.json());
 
-// Rute untuk autentikasi
-app.use('/auth', authRoutes);
+app.use(express.static(path.join(__dirname, '../')));
 
-// Rute untuk endpoint yang dilindungi
-app.use('/protected', protectedRoutes);
+//DATABASE
+const mongoose = require('mongoose');
+const Products = require('./models/Product');
 
-const PORT = 3000;
-
-// Koneksi ke MongoDB
-mongoose.connect('mongodb://localhost:27017/cobain_user', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-        console.log('Connected to MongoDB');
-        app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-    })
-    .catch(err => console.log(err));
+// READ PRODUCTS
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await Products.find(); 
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});

@@ -33,35 +33,31 @@
     </div>
 
     <!-- Header Section Begin -->
-    <header class="header" style="margin-bottom: -18px; margin-top: -18px;">
-        <div class="header__top">
-        </div>
+    <header class="header" style="margin-bottom: -10px; margin-top: -15px;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="../index.php"><img src="img/dobah.png" alt="" width="130px"
-                                style="margin-top: -30px;"></a>
+                        <a href="../index.html"><img src="img/dobah.png" alt="" width="130px"
+                                style="margin-top: 5px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu" style="font-size: 20px; font-weight:600; margin-top: -10px;">
-                        <ul class>
-                            <li><a href=" ../about.php"></a> Home</li>
-                            <li><a href=" ../about.php"></a> Shop</li>
-                            <li><a href=" ../about.php"></a> About</li>
-                            <li><a href=" ../about.php"></a> Contact Us</li>
+                    <nav class="header__menu mobile-menu" style="font-size: 20px; font-weight:600; margin-top: 23px;">
+                        <ul>
+                            <li><a href="../index.html" class="nav-link">Home</a></li>
+                            <li><a href="../shop.html" class="nav-link">Menu</a></li>
+                            <li><a href="../about.html" class="nav-link">About Us</a></li>
+                            <li><a href="../contact.html" class="nav-link">Contact</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option" style="margin-top: -10px;">
+                    <div class="header__nav__option" style="margin-top: 23px;">
                         <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="../account.php"><img src="img/icon/user.png" alt=""></a>
-                        <a href="../shopping-cart.php"><img src="img/icon/cart.png" alt=""> <span>
-                            </span></a>
-                        <div class="price">
-                        </div>
+                        <a href="../account.html"><img src="img/icon/user.png" alt=""></a>
+                        <a href="../shopping-cart.html"><img src="img/icon/cart.png" alt=""> <span
+                                id="cart-quantity"></span></a>
                     </div>
                 </div>
             </div>
@@ -82,7 +78,7 @@
                                 <h2>Bundling Signature Jhouse</h2>
                                 <p>Nasi + ayam spicy dada/paha atas + scramble egg + kailan crispy + minuman pilihan.
                                 </p>
-                                <a href="shop.php" class="primary-btn">Pesan Sekarang<span
+                                <a href="shop.html" class="primary-btn">Pesan Sekarang<span
                                         class="arrow_right"></span></a>
                                 <div class="hero__social">
                                 </div>
@@ -99,7 +95,7 @@
                                 <h6>NEWEST MENU</h6>
                                 <h2>Spicy Chicken Burger</h2>
                                 <p>Spicy Chicken Strips, Purple Cabbage, Pickle, and Cheese Sauce</p>
-                                <a href="shop.php" class="primary-btn">Pesan Sekarang <span
+                                <a href="shop.html" class="primary-btn">Pesan Sekarang <span
                                         class="arrow_right"></span></a>
                                 <div class="hero__social">
                                 </div>
@@ -123,32 +119,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="row product__filter">
-                    <?php while($row = $fav_products->fetch_assoc()) { ?>
-                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg"
-                                data-setbg="img/product/<?php echo $row['product_image']; ?>">
-                            </div>
-                            <div class="product__item__text">
-                                <h6>
-                                    <?php echo $row['product_name']; ?>
-                                </h6>
-                                <p>
-                                    <?php echo $row['product_description'] ?>
-                                </p>
-                                <h5>
-                                    <?php echo number_format($row['product_price'], 0, ',', '.'); ?>
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <?php } ?>
+                <div class="row product__filter" id="product-container">
                 </div>
             </div>
         </section>
         <div class="container text-center">
-            <a href="shop.php" class="primary-btn" style="margin-bottom: 30px;">Lihat Semua Menu</a>
+            <a href="shop.html" class="primary-btn" style="margin-bottom: 30px;">Lihat Semua Menu</a>
         </div>
     </div>
     <!-- Product Section End -->
@@ -208,7 +184,7 @@
                         <br><br><br><br>
                         <span>NEWEST STORE</span>
                         <h2>Promo Opening 20%</h2>
-                        <a href="about.php" class="primary-btn" style="background: black;">Visit Us</a>
+                        <a href="about.html" class="primary-btn" style="background: black;">Visit Us</a>
                     </div>
                 </div>
             </div>
@@ -250,7 +226,7 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__logo">
-                            <a href="../index.php"><img src="img/dobah.png" alt="" width="200px"
+                            <a href="../index.html"><img src="img/dobah.png" alt="" width="200px"
                                     style="margin-top: -30px;"></a>
                         </div>
                         <p style="margin-top: -30px; text-align: justify;">Kami menyediakan ayam krispi dengan kailan
@@ -315,6 +291,61 @@
         </div>
     </div>
     <!-- Search End -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set active class based on current page URL
+            const links = document.querySelectorAll('.nav-link');
+            const currentPath = window.location.pathname; // Get current path
+
+            links.forEach(link => {
+                const linkPath = link.getAttribute('href'); // Get the path of each link
+                if (currentPath === linkPath) {
+                    link.parentElement.classList.add('active'); // Add 'active' class to the current link
+                }
+            });
+
+            // Optionally: Display cart quantity (assuming it's stored in sessionStorage or similar)
+            const cartQuantity = sessionStorage.getItem('quantity') || 0;
+            document.getElementById('cart-quantity').textContent = cartQuantity > 0 ? cartQuantity : '';
+        });
+    </script>
+
+    <script>
+        async function fetchProducts() {
+            try {
+                // Ambil data dari endpoint API
+                const response = await fetch('http://localhost:3000/api/products');
+                const products = await response.json();
+
+                // Lokasi untuk menyisipkan produk
+                const productContainer = document.querySelector('.product__filter');
+
+                // Iterasi melalui produk dan tambahkan ke dalam HTML
+                products.forEach(product => {
+                    const productHTML = `
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg" 
+                            style="background-image: url('img/product/${product.product_image}');">
+                            </div>
+                            <div class="product__item__text">
+                                <h6>${product.product_name}</h6>
+                                <p style="text-align: justify;">${product.product_description}</p>
+                                <h5>${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(product.product_price)}</h5>
+                            </div>
+                        </div>
+                    </div>`;
+                    productContainer.insertAdjacentHTML('beforeend', productHTML);
+                });
+            } catch (err) {
+                console.error('Error fetching products:', err);
+            }
+        }
+
+        // Panggil fungsi fetchProducts setelah halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', fetchProducts);
+    </script>
 
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>

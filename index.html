@@ -21,7 +21,9 @@
     <link rel="stylesheet" href="css/nice-select.css" type="text/css">
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/styleloc.css" type="text/css">
 
     <link rel="icon" href="img/icon/dobah.png" type="image/png">
 </head>
@@ -33,35 +35,31 @@
     </div>
 
     <!-- Header Section Begin -->
-    <header class="header" style="margin-bottom: -18px; margin-top: -18px;">
-        <div class="header__top">
-        </div>
+    <header class="header" style="margin-bottom: -20px; margin-top: -25px;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="../index.php"><img src="img/dobah.png" alt="" width="130px"
-                                style="margin-top: -30px;"></a>
+                        <a href="../index.html"><img src="img/dobah.png" alt="" width="130px"
+                                style="margin-top: 5px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu" style="font-size: 20px; font-weight:600; margin-top: -10px;">
-                        <ul class>
-                            <li><a href=" ../about.php"></a> Home</li>
-                            <li><a href=" ../about.php"></a> Shop</li>
-                            <li><a href=" ../about.php"></a> About</li>
-                            <li><a href=" ../about.php"></a> Contact Us</li>
+                    <nav class="header__menu mobile-menu" style="font-size: 20px; font-weight:600; margin-top: 23px;">
+                        <ul>
+                            <li><a href="../index.html" class="nav-link">Home</a></li>
+                            <li><a href="../shop.html" class="nav-link">Shop</a></li>
+                            <li><a href="../about.html" class="nav-link">About Us</a></li>
+                            <li><a href="../contact.html" class="nav-link">Contact</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option" style="margin-top: -10px;">
+                    <div class="header__nav__option" style="margin-top: 23px;">
                         <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="../account.php"><img src="img/icon/user.png" alt=""></a>
-                        <a href="../shopping-cart.php"><img src="img/icon/cart.png" alt=""> <span>
-                            </span></a>
-                        <div class="price">
-                        </div>
+                        <a href="../account.html"><img src="img/icon/user.png" alt=""></a>
+                        <a href="../shopping-cart.html"><img src="img/icon/cart.png" alt=""> <span
+                                id="cart-quantity"></span></a>
                     </div>
                 </div>
             </div>
@@ -73,16 +71,17 @@
     <!-- Hero Section Begin -->
     <section class="hero">
         <div class="hero__slider owl-carousel">
-            <div class="hero__items set-bg" data-setbg="img/hero/picture.jpg">
+            <div class="hero__items set-bg" data-setbg="img/hero/picture.jpg" style="height: 750px;">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 col-lg-7 col-md-8">
                             <div class="hero__text">
-                                <h6>Diskon 10%!</h6>
-                                <h2>Bundling Signature Jhouse</h2>
-                                <p>Nasi + ayam spicy dada/paha atas + scramble egg + kailan crispy + minuman pilihan.
+                                <h2 style="font-size: 50px; display: flex;">Desember Bahagia</h2>
+                                <p style="font-size: 20px; text-shadow: 1px 1px 0 black;">FREE Dobah gula kayu manis dan
+                                    gula strawberry, di setiap paket pembelian Donat
+                                    Package 12 Pcs
                                 </p>
-                                <a href="shop.php" class="primary-btn">Pesan Sekarang<span
+                                <a href="shop.html" class="primary-btn">Pesan Sekarang<span
                                         class="arrow_right"></span></a>
                                 <div class="hero__social">
                                 </div>
@@ -91,15 +90,15 @@
                     </div>
                 </div>
             </div>
-            <div class="hero__items set-bg" data-setbg="img/hero/picture5.jpg">
+            <div class="hero__items set-bg" data-setbg="img/hero/picture5.jpg" style="height: 700px;">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 col-lg-7 col-md-8">
                             <div class="hero__text">
-                                <h6>NEWEST MENU</h6>
-                                <h2>Spicy Chicken Burger</h2>
-                                <p>Spicy Chicken Strips, Purple Cabbage, Pickle, and Cheese Sauce</p>
-                                <a href="shop.php" class="primary-btn">Pesan Sekarang <span
+                                <h2 style="font-size: 50px; display: flex;">Double Attack Pack</h2>
+                                <p style="font-size: 20px; text-shadow: 1px 1px 0 black;">Beli Double Attack Pack buat
+                                    dapetin diskon 10%🫶🏻</p>
+                                <a href="shop.html" class="primary-btn">Pesan Sekarang <span
                                         class="arrow_right"></span></a>
                                 <div class="hero__social">
                                 </div>
@@ -123,98 +122,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="row product__filter">
-                    <?php while($row = $fav_products->fetch_assoc()) { ?>
-                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg"
-                                data-setbg="img/product/<?php echo $row['product_image']; ?>">
-                            </div>
-                            <div class="product__item__text">
-                                <h6>
-                                    <?php echo $row['product_name']; ?>
-                                </h6>
-                                <p>
-                                    <?php echo $row['product_description'] ?>
-                                </p>
-                                <h5>
-                                    <?php echo number_format($row['product_price'], 0, ',', '.'); ?>
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <?php } ?>
+                <div class="row product__filter" id="product-container">
                 </div>
             </div>
         </section>
         <div class="container text-center">
-            <a href="shop.php" class="primary-btn" style="margin-bottom: 30px;">Lihat Semua Menu</a>
+            <a href="shop.html" class="primary-btn" style="margin-bottom: 30px;">Lihat Semua Menu</a>
         </div>
     </div>
     <!-- Product Section End -->
 
-    <!-- Slider Begin -->
-    <div class="slider" style="margin: -18px;">
-        <div class="slide-track">
-            <div class="slide"><img src="img/product/bundling signature/Paket Original JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Spicy JH Signature 2 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Original JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Spicy JH Signature 2 Medium.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Spicy JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Original JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Spicy JH Signature 1 Medium.jpg"
-                    class="imgslide"></div>
-
-            <div class="slide"><img src="img/product/bundling signature/Paket Spicy JH Signature 2 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Original JH Signature 1 Medium.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Original JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Spicy JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Original JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Spicy JH Signature 1 Medium.jpg"
-                    class="imgslide"></div>
-            <div class="slide"><img src="img/product/bundling signature/Paket Original JH Signature 1 Large.jpg"
-                    class="imgslide"></div>
+    <!-- Category Section Begin -->
+    <div class="latar3">
+        <div class="col-lg-12">
+            <div class="section-title" style="margin-bottom: -3px;">
+                <h2 style="font-weight: 1000; color: white;">Shop by Category</h2>
+            </div>
         </div>
-    </div>
-    <!-- Slider End -->
-
-    <!-- Categories Section Begin -->
-    <section class="categories spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="categories__text">
-                        <h2>JH Bandung <br /> <span>JH Tangerang</span> <br /> JH Surabaya</h2>
-                    </div>
+        <div class="latar2">
+            <div class="gallery">
+                <div class="imageC">
+                    <img src="img/package.jpg" alt="Picture 1">
+                    <p>Package</p>
                 </div>
-                <div class="col-lg-4">
-                    <div class="categories__hot__deal">
-                        <img src="img/banner/pic1.png" alt="" style="border-radius: 10px;">
-                    </div>
+                <div class="imageC">
+                    <img src="img/milkycream.jpg" alt="Picture 2">
+                    <p>Milky Cream</p>
                 </div>
-                <div class="col-lg-4 offset-lg-1">
-                    <div class="categories__deal__countdown">
-                        <br><br><br><br>
-                        <span>NEWEST STORE</span>
-                        <h2>Promo Opening 20%</h2>
-                        <a href="about.php" class="primary-btn" style="background: black;">Visit Us</a>
-                    </div>
+                <div class="imageC">
+                    <img src="img/klasik.jpg" alt="Picture 3">
+                    <p>Classic</p>
+                </div>
+                <div class="imageC">
+                    <img src="img/ringnfill.jpg" alt="Picture 4">
+                    <p>Ring N Fill</p>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Categories Section End -->
+    </div>
+    <!-- Category Section End -->
 
     <!-- Instagram Section Begin -->
     <section class="instagram spad">
@@ -250,14 +196,12 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__logo">
-                            <a href="../index.php"><img src="img/dobah.png" alt="" width="200px"
+                            <a href="../index.html"><img src="img/dobah.png" alt="" width="200px"
                                     style="margin-top: -30px;"></a>
                         </div>
-                        <p style="margin-top: -30px; text-align: justify;">Kami menyediakan ayam krispi dengan kailan
-                            khas Jatinangor House
-                            krispi dengan harga yang
-                            terjangkau
-                            serta menawarkan beragam pilihan ayam, burger, kentang goreng, dan minuman.</p>
+                        <p style="margin-top: -30px; text-align: justify;">Donat Bikin Bahagia – 70 Varian Rasa, Dibuat
+                            dengan Cinta oleh Pengrajin Bahagia 💕.
+                            Nikmati Kelezatan Donat Khas Indonesia, Freshly Made for You!</p>
                     </div>
                 </div>
                 <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
@@ -265,18 +209,18 @@
                         <h6>Hubungi Kami</h6>
                         <ul>
                             <li><img src="img/icon/instagram.png" alt=""><a
-                                    href="https://www.instagram.com/jatinangorhouse/"> Instagram</a></li>
-                            <li><img src="img/icon/twitter.png" alt=""><a
-                                    href="https://www.instagram.com/jatinangorhouse/">
-                                    Twitter</a></li>
+                                    href="https://www.instagram.com/officialdonat_bahagia/"> Instagram</a></li>
+                            <li><img src="img/icon/whatsapp.png" alt=""><a
+                                    href="https://api.whatsapp.com/send/?phone=6282126849723&text=Hallo%20admin%20saya%20mau%20order%20donat%20bahagia%20dan%20dapetin%20FREE%201%20PACK%20CANVAS%20DONUT%20dong">
+                                    WhatsApp</a></li>
                             <li><img src="img/icon/facebook.png" alt=""><a
-                                    href="https://www.instagram.com/jatinangorhouse/"> Facebook</a></li>
+                                    href="https://www.facebook.com/donat.bahagia/"> Facebook</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
                     <div class="footer__widget">
-                        <h6>Berlangganan NewsLetter Jatinangor House</h6>
+                        <h6>Dapatkan info promo terbaru, yuk masukkan emailmu!</h6>
                         <div class="footer__newslatter">
                             <form action="#">
                                 <input type="text" placeholder="Masukkan Email">
@@ -290,12 +234,8 @@
                 <div class="col-lg-12 text-center">
                     <div class="footer__copyright__text">
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        <p>Copyright ©
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>
-                            Generation Girls Bandung | This website is made with <i class="fa fa-heart-o"
-                                aria-hidden="true"></i> by Reneta Elza
+                        <p>
+                            This website is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by Reneta Elza
                         </p>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     </div>
@@ -316,10 +256,71 @@
     </div>
     <!-- Search End -->
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set active class based on current page URL
+            const links = document.querySelectorAll('.nav-link');
+            const currentPath = window.location.pathname; // Get current path
+
+            links.forEach(link => {
+                const linkPath = link.getAttribute('href'); // Get the path of each link
+                if (currentPath === linkPath) {
+                    link.parentElement.classList.add('active'); // Add 'active' class to the current link
+                }
+            });
+
+            // Optionally: Display cart quantity (assuming it's stored in sessionStorage or similar)
+            const cartQuantity = sessionStorage.getItem('quantity') || 0;
+            document.getElementById('cart-quantity').textContent = cartQuantity > 0 ? cartQuantity : '';
+        });
+    </script>
+
+    <script>
+        async function fetchProducts() {
+            try {
+                // Fetch data from the API endpoint
+                const response = await fetch('http://localhost:3000/api/products');
+                const products = await response.json();
+
+                // Slice the first 4 products from the array
+                const limitedProducts = products.slice(0, 4);
+
+                // Location to insert products
+                const productContainer = document.querySelector('.product__filter');
+
+                // Loop through the limited products and add to the HTML
+                limitedProducts.forEach(product => {
+                    const productHTML = `
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg" 
+                            style="background-image: url('img/product/${product.product_image}');">
+                            </div>
+                            <div class="product__item__text">
+                                <h6>${product.product_name}</h6>
+                                <p style="text-align: justify;">${product.product_description}</p>
+                                <h5>${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(product.product_price)}</h5>
+                            </div>
+                        </div>
+                    </div>`;
+                    productContainer.insertAdjacentHTML('beforeend', productHTML);
+                });
+            } catch (err) {
+                console.error('Error fetching products:', err);
+            }
+        }
+
+        // Call fetchProducts after the page is loaded
+        document.addEventListener('DOMContentLoaded', fetchProducts);
+    </script>
+
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <!-- Core plugin JavaScript-->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <script src="js/jquery-easing/jquery.easing.min.js"></script>
     <script src="js/jquery.nice-select.min.js"></script>
     <script src="js/jquery.nicescroll.min.js"></script>
@@ -329,6 +330,7 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/tranding.js"></script>
     <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 </body>
 <!-- Instagram Section End -->

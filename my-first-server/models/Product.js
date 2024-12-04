@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
-     nama: { type: String, required: true },
-     username: { type: String, required: true, unique: true },
-     password: { type: String, required: true },
-     phone: { type: String, required: true },
-     address: { type: String, required: true },
-     city: { type: String, required: true },
+const ProductSchema = new mongoose.Schema({
+    _id: { type: String, required: true },
+    product_name: { type: String, required: true, unique: true },
+    product_category: { type: String, required: true },
+    product_description: { type: String, required: true },
+    product_price: { type: Number, required: true }, 
+    product_image: { type: String, required: true },
 });
 
-const Product = mongoose.model('Product', userSchema);
-module.exports = [Product];
+const Products = mongoose.model('Products', ProductSchema);
+
+module.exports = Products;

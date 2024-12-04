@@ -40,32 +40,276 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="../index.php"><img src="img/dobah.png" alt="" width="130px"
+                        <a href="../index.html"><img src="img/dobah.png" alt="" width="130px"
                                 style="margin-top: -30px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu" style="font-size: 20px; font-weight:600; margin-top: -10px;">
-                        <ul class>
-                            <li><a href=" ../about.php"></a> Home</li>
-                            <li><a href=" ../about.php"></a> Shop</li>
-                            <li><a href=" ../about.php"></a> About</li>
-                            <li><a href=" ../about.php"></a> Contact Us</li>
+                        <ul>
+                            <li><a href=" ../index.html"></a> Home</li>
+                            <li><a href=" ../shop.html"></a> Shop</li>
+                            <li><a href=" ../about.html"></a> About</li>
+                            <li><a href=" ../contact.html"></a> Contact Us</li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option" style="margin-top: -10px;">
                         <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="../account.php"><img src="img/icon/user.png" alt=""></a>
-                        <a href="../shopping-cart.php"><img src="img/icon/cart.png" alt=""> <span>
-                            </span></a>
-                        <div class="price">
+                        <a href="../account.html"><img src="img/icon/user.png" alt=""></a>
+                        <a href="../shopping-cart.html"><img src="img/icon/cart.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container text-center">
+            <div class="border border-secondary"
+                style="border-radius: 30px; width: 1150px; padding: 20px; border-width: 5px; text-align: left;">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="breadcrumb__text">
+                            <h4>Shopping Cart</h4>
+                            <div class="breadcrumb__links">
+                                <a href="index.html">Home</a>
+                                <a href="shop.html"> > </a>
+                                <span>Shop</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
-    </header>
-    <!-- Header Section End -->
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shopping Cart Section Begin -->
+    <section class="shopping-cart spad" style="margin-top: -100px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="shopping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shopping__product">Product</th>
+                                    <th class="shopping__quantity">Quantity</th>
+                                    <th class="shopping__price">Price</th>
+                                    <th class="shopping__action">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart_items">
+                                <!-- Items will be added dynamically here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn">
+                                <a href="shop.html"
+                                    style="background-color: #493628; margin:5px; padding: 10px 80px 10px;"
+                                    class="btn btn-info">Continue Shopping <i
+                                        class="fa fa-arrow-circle-o-right fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h6 style="margin-left: 30px; margin-bottom: 20px; font-size: 20px; font-weight: 800;">Ringkasan
+                        Pembayaran</h6>
+                    <div class="cart__total">
+                        <ul>
+                            <li>Total: <span id="total_payment">Rp 0</span></li>
+                            <li style="border-bottom: 1px solid #000;">Ongkos Kirim <span>Rp 20.000</span></li>
+                            <li style="margin-top: 20px; font-weight: 1000;">Total Pembayaran <span id="final_total">Rp
+                                    0</span></li>
+                        </ul>
+                        <form id="checkout_form" method="POST" action="checkout.html">
+                            <input style="background-color: #493628; margin:5px; padding: 10px 80px 10px;" type="submit"
+                                class="btn btn-info" value="Checkout" name="checkout">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shopping Cart Section End -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__logo">
+                            <a href="../index.html"><img src="img/dobah.png" alt="" width="200px"
+                                    style="margin-top: -30px;"></a>
+                        </div>
+                        <p style="margin-top: -30px; text-align: justify;">Donat Bikin Bahagia – 70 Varian Rasa, Dibuat
+                            dengan Cinta oleh Pengrajin Bahagia 💕.
+                            Nikmati Kelezatan Donat Khas Indonesia, Freshly Made for You!</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Hubungi Kami</h6>
+                        <ul>
+                            <li><img src="img/icon/instagram.png" alt=""><a
+                                    href="https://www.instagram.com/officialdonat_bahagia/"> Instagram</a></li>
+                            <li><img src="img/icon/whatsapp.png" alt=""><a
+                                    href="https://api.whatsapp.com/send/?phone=6282126849723&text=Hallo%20admin%20saya%20mau%20order%20donat%20bahagia%20dan%20dapetin%20FREE%201%20PACK%20CANVAS%20DONUT%20dong">
+                                    WhatsApp</a></li>
+                            <li><img src="img/icon/facebook.png" alt=""><a
+                                    href="https://www.facebook.com/donat.bahagia/">
+                                    Facebook</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Dapatkan info promo terbaru, yuk masukkan emailmu!</h6>
+                        <div class="footer__newslatter">
+                            <form action="#">
+                                <input type="text" placeholder="Masukkan Email">
+                                <button type="submit"><span class="icon_mail_alt"></span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="footer__copyright__text">
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        <p>
+                            This website is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by Reneta Elza
+                        </p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+    <script>
+        // Fungsi untuk menambahkan produk ke keranjang
+        function addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Periksa apakah produk sudah ada di keranjang
+            const existingProduct = cart.find(item => item.product_id === product.product_id);
+
+            if (existingProduct) {
+                // Jika produk sudah ada, perbarui kuantitasnya
+                existingProduct.product_quantity += product.product_quantity;
+            } else {
+                // Jika produk belum ada, tambahkan sebagai produk baru
+                cart.push(product);
+            }
+
+            // Simpan kembali ke localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Notifikasi atau refresh tampilan keranjang
+            alert('Product added to cart!');
+            displayCartItems(); // Perbarui tampilan keranjang (jika perlu)
+        }
+
+        // Fungsi untuk menampilkan item di keranjang
+        function displayCartItems() {
+            const cartItemsContainer = document.getElementById('cart_items');
+            const totalPaymentElement = document.getElementById('total_payment');
+            const finalTotalElement = document.getElementById('final_total');
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let totalPrice = 0;
+
+            cartItemsContainer.innerHTML = ''; // Hapus item sebelumnya
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<tr><td colspan="4">Your cart is empty!</td></tr>';
+                return;
+            }
+
+            // Loop melalui setiap item dalam keranjang
+            cart.forEach(item => {
+                const rowHTML = `
+            <tr>
+                <td class="shopping__product">
+                    <img src="img/product/${item.product_image}" alt="${item.product_name}" style="width: 50px;">
+                    ${item.product_name}
+                </td>
+                <td class="shopping__quantity">
+                    <input 
+                        type="number" 
+                        min="1" 
+                        value="${item.product_quantity}" 
+                        onchange="updateQuantity('${item.product_id}', this.value)"
+                        class="quantity_input"
+                        style="width: 50px;"
+                    />
+                </td>
+                <td class="shopping__price">${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(item.product_price * item.product_quantity)}</td>
+                <td class="shopping__action">
+                    <button onclick="removeFromCart('${item.product_id}')" class="btn btn-danger">Remove</button>
+                </td>
+            </tr>`;
+                cartItemsContainer.insertAdjacentHTML('beforeend', rowHTML);
+
+                // Hitung total harga
+                totalPrice += item.product_price * item.product_quantity;
+            });
+
+            // Tampilkan total pembayaran
+            totalPaymentElement.textContent = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+            finalTotalElement.textContent = `Rp ${(totalPrice + 20000).toLocaleString('id-ID')}`; // Tambahkan ongkir
+        }
+
+        // Fungsi untuk memperbarui kuantitas produk
+        function updateQuantity(productId, newQuantity) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            newQuantity = parseInt(newQuantity);
+
+            if (newQuantity < 1) {
+                alert('Quantity cannot be less than 1');
+                return;
+            }
+
+            // Cari produk dalam keranjang dan perbarui kuantitasnya
+            cart = cart.map(item => {
+                if (item.product_id === productId) {
+                    item.product_quantity = newQuantity;
+                }
+                return item;
+            });
+
+            // Simpan kembali ke localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Refresh keranjang
+            displayCartItems();
+        }
+
+        // Fungsi untuk menghapus produk dari keranjang
+        function removeFromCart(productId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.product_id !== productId);
+
+            // Simpan perubahan ke localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Refresh keranjang
+            displayCartItems();
+        }
+
+        // Panggil fungsi untuk menampilkan item saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', displayCartItems);
+
+    </script>
+</body>
+
+</html>

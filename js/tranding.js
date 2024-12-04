@@ -1,4 +1,4 @@
-var TrandingSlider = new Swiper('.tranding-slider', {
+var TrandingSlider = new Swiper('#tranding .tranding-slider', {
   effect: 'coverflow',
   grabCursor: true,
   centeredSlides: true,
@@ -11,11 +11,11 @@ var TrandingSlider = new Swiper('.tranding-slider', {
     modifier: 2.5,
   },
   pagination: {
-    el: '.swiper-pagination',
+    el: '#tranding .swiper-pagination',
     clickable: true,
   },
   navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
+    nextEl: '#tranding .swiper-button-next',
+    prevEl: '#tranding .swiper-button-prev',
   }
 });

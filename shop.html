@@ -1,55 +1,3 @@
-<?php
-include('server/connection.php');
-
-$items_per_page = 12;
-
-$current_page = isset($_GET['page']) ? $_GET['page'] : 1;
-
-$offset = ($current_page - 1) * $items_per_page;
-
-$sort_order = isset($_GET['sort']) ? $_GET['sort'] : 'ASC';
-$sort_order = strtoupper($sort_order);
-if ($sort_order != 'ASC' && $sort_order != 'DESC') {
-    $sort_order = 'ASC';
-}
-
-if (isset($_GET['category'])) {
-    $category = $_GET['category'];
-    if ($category === 'All') {
-        $query_products = "SELECT * FROM products LIMIT $offset, $items_per_page";
-    } else {
-        $query_products = "SELECT * FROM products WHERE product_category = ? LIMIT $offset, $items_per_page";
-    }
-    $stmt_products = $conn->prepare($query_products);
-    if ($category !== 'All') {
-        $stmt_products->bind_param('s', $category);
-    }
-    $stmt_products->execute();
-    $products = $stmt_products->get_result();
-} else if (isset($_POST['cari'])) {
-    $keyword = ucfirst(strtolower($_POST['keyword']));
-    $q = "SELECT * FROM products WHERE product_name LIKE '%$keyword%' OR
-              product_category LIKE '%$keyword%'";
-    $stmt_products = $conn->prepare($q);
-    $stmt_products->execute();
-    $products = $stmt_products->get_result();
-} else {
-    $query_products = "SELECT * FROM products LIMIT $offset, $items_per_page";
-    $stmt_products = $conn->prepare($query_products);
-    $stmt_products->execute();
-    $products = $stmt_products->get_result();
-}
-
-$total_products_query = "SELECT COUNT(*) as total FROM products";
-$total_products_result = $conn->query($total_products_query);
-$total_products = $total_products_result->fetch_assoc()['total'];
-$total_pages = ceil($total_products / $items_per_page);
-?>
-
-<?php
-include('layouts/header.php');
-?>
-
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -76,6 +24,55 @@ include('layouts/header.php');
     <link rel="stylesheet" href="css/style.css" type="text/css">
 
     <link rel="icon" href="img/icon/dobah.png" type="image/png">
+
+    <style>
+        /* Pop-up modal styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup-modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup-modal h4 {
+            margin-bottom: 20px;
+        }
+
+        .popup-modal button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup-modal .btn-cancel {
+            background-color: #ccc;
+            color: #000;
+            margin-right: 10px;
+        }
+
+        .popup-modal .btn-login {
+            background-color: #493628;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -92,32 +89,28 @@ include('layouts/header.php');
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="../index.php"><img src="img/dobah.png" alt="" width="130px"
+                        <a href="../index.html"><img src="img/dobah.png" alt="" width="130px"
                                 style="margin-top: -30px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu" style="font-size: 20px; font-weight:600; margin-top: -10px;">
-                        <ul class>
-                            <li><a href=" ../about.php"></a> Home</li>
-                            <li><a href=" ../about.php"></a> Shop</li>
-                            <li><a href=" ../about.php"></a> About</li>
-                            <li><a href=" ../about.php"></a> Contact Us</li>
+                        <ul>
+                            <li><a href=" ../index.html"></a> Home</li>
+                            <li><a href=" ../shop.html"></a> Shop</li>
+                            <li><a href=" ../about.html"></a> About</li>
+                            <li><a href=" ../contact.html"></a> Contact Us</li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option" style="margin-top: -10px;">
                         <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="../account.php"><img src="img/icon/user.png" alt=""></a>
-                        <a href="../shopping-cart.php"><img src="img/icon/cart.png" alt=""> <span>
-                            </span></a>
-                        <div class="price">
-                        </div>
+                        <a href="../account.html"><img src="img/icon/user.png" alt=""></a>
+                        <a href="../shopping-cart.html"><img src="img/icon/cart.png" alt=""></a>
                     </div>
                 </div>
             </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
     </header>
     <!-- Header Section End -->
@@ -125,53 +118,48 @@ include('layouts/header.php');
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-option">
         <div class="container text-center">
-            <div class="border border-info"
+            <div class="border border-secondary"
                 style="border-radius: 30px; width: 1150px; padding: 20px; border-width: 5px; text-align: left;">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="breadcrumb__text">
-                            <h4>Menu</h4>
+                            <h4>Shop</h4>
                             <div class="breadcrumb__links">
-                                <a href="index.php">Home</a>
-                                <a href="">></a>
-                                <span>Menu</span>
+                                <a href="index.html">Home</a>
+                                <a href="shop.html"> > </a>
+                                <span>Shop</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </section>
     <!-- Breadcrumb Section End -->
 
     <!-- Shop Section Begin -->
     <section class="shop spad" style="margin-top: -80px;">
-
         <div class="container">
             <div class="row">
-                <details class="details-dropdown" style="margin-left: 30px; ">
+                <details class="details-dropdown" style="margin-left: 30px;">
                     <summary role="button">
                         <a style="font-weight: 600;" class="button">Kategori</a>
                     </summary>
-                    <ul>
-                        <form method="POST" action="shop.php">
-                            <li><a href="?category=All">All</a></li>
-                            <li><a href="?category=Paket">Paket</a></li>
-                            <li><a href="?category=Burger">Burger</a></li>
-                            <li><a href="?category=Ala Carte">Ala Carte</a></li>
-                            <li><a href="?category=Snack">Snack</a></li>
-                            <li><a href="?category=Drinks Coffee">Drinks Coffee</a></li>
-                            <li><a href="?category=Drinks Non Coffee">Drinks Non Coffee</a></li>
-                            <li><a href="?category=Drinks Refreshing">Drinks Refreshing</a></li>
-                        </form>
+                    <ul class="details-dropdown">
+                        <li><a href="#" data-category="All">All</a></li>
+                        <li><a href="#" data-category="Donut Package of 12 Pcs">Donut Package of 12 Pcs</a></li>
+                        <li><a href="#" data-category="Donut Pack of 6 Pcs">Donut Pack of 6 Pcs</a></li>
+                        <li><a href="#" data-category="Ring N Fill">Ring N Fill</a></li>
+                        <li><a href="#" data-category="Milky Cream">Milky Cream</a></li>
+                        <li><a href="#" data-category="Classic">Classic</a></li>
                     </ul>
                 </details>
-                <div style="margin-left: 6px; width: 982px;" class="shop__sidebar__search">
-                    <form action="shop.php" method="POST">
+                <div class="shop__sidebar__search" style="margin-left: 6px; width: 982px;">
+                    <form action="shop.html" method="POST">
                         <input type="text" name="keyword" placeholder="Search">
-                        <button class="btn btn-info" style="background-color: #3AD4D5;" type="submit" name="cari"><img
-                                src="img/icon/search.png" style="width: 12px;" alt=""></button>
+                        <button class="btn btn-info" style="background-color: #493628;" type="submit" name="cari">
+                            <img src="img/icon/search.png" style="width: 12px;" alt="">
+                        </button>
                     </form>
                 </div>
             </div>
@@ -181,68 +169,298 @@ include('layouts/header.php');
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="shop__product__option__left">
-                                <p>Showing
-                                    <?php echo $offset + 1; ?>–
-                                    <?php echo min($offset + $items_per_page, $total_products); ?> of
-                                    <?php echo $total_products; ?> results
-                                </p>
+                                <p>Showing <span id="product-range"></span> results out of <span
+                                        id="total-products"></span></p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <?php while ($row = $products->fetch_assoc()) { ?>
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg"
-                                data-setbg="img/product/<?php echo $row['product_image']; ?>">
-                            </div>
-                            <div class="product__item__text">
-                                <h6>
-                                    <?php echo $row['product_name']; ?>
-                                </h6>
-                                <p>
-                                    <?php echo $row['product_description'] ?>
-                                </p>
-                                <h5>
-                                    <?php echo number_format($row['product_price'], 0, ',', '.'); ?>
-                                </h5>
-                                <!-- Change the form action to shopping-cart.php -->
-                                <form method="POST" action="shopping-cart.php">
-                                    <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>">
-                                    <input type="hidden" name="product_image"
-                                        value="<?php echo $row['product_image']; ?>">
-                                    <input type="hidden" name="product_name"
-                                        value="<?php echo $row['product_name']; ?>">
-                                    <input type="hidden" name="product_price"
-                                        value="<?php echo $row['product_price']; ?>">
-                                    <input type="hidden" name="product_quantity" value="1">
-                                    <button style="background-color: #3AD4D5; margin:5px" type="submit"
-                                        name="add_to_cart" class="btn btn-info">Add to cart</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <?php } ?>
+                <div class="row" id="product-list">
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="product__pagination">
-                            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
-                            <a <?php if ($i==$current_page) echo 'class="active"' ; ?> href="?page=
-                                <?php echo $i; ?>">
-                                <?php echo $i; ?>
-                            </a>
-                            <?php } ?>
                         </div>
                     </div>
                 </div>
+                <!-- Pop-up Modal -->
+                <div class="popup-overlay">
+                    <div class="popup-modal">
+                        <h4>Anda belum login</h4>
+                        <p>Silakan login atau registrasi terlebih dahulu untuk melanjutkan.</p>
+                        <button class="btn-cancel">Cancel</button>
+                        <button class="btn-login">Login</button>
+                    </div>
+                </div>
+
             </div>
-        </div>
         </div>
     </section>
     <!-- Shop Section End -->
 
-    <?php
-include('layouts/footer.php');
-?>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__logo">
+                            <a href="../index.html"><img src="img/dobah.png" alt="" width="200px"
+                                    style="margin-top: -30px;"></a>
+                        </div>
+                        <p style="margin-top: -30px; text-align: justify;">Donat Bikin Bahagia – 70 Varian Rasa, Dibuat
+                            dengan Cinta oleh Pengrajin Bahagia 💕.
+                            Nikmati Kelezatan Donat Khas Indonesia, Freshly Made for You!</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Hubungi Kami</h6>
+                        <ul>
+                            <li><img src="img/icon/instagram.png" alt=""><a
+                                    href="https://www.instagram.com/officialdonat_bahagia/"> Instagram</a></li>
+                            <li><img src="img/icon/whatsapp.png" alt=""><a
+                                    href="https://api.whatsapp.com/send/?phone=6282126849723&text=Hallo%20admin%20saya%20mau%20order%20donat%20bahagia%20dan%20dapetin%20FREE%201%20PACK%20CANVAS%20DONUT%20dong">
+                                    WhatsApp</a></li>
+                            <li><img src="img/icon/facebook.png" alt=""><a
+                                    href="https://www.facebook.com/donat.bahagia/">
+                                    Facebook</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Dapatkan info promo terbaru, yuk masukkan emailmu!</h6>
+                        <div class="footer__newslatter">
+                            <form action="#">
+                                <input type="text" placeholder="Masukkan Email">
+                                <button type="submit"><span class="icon_mail_alt"></span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="footer__copyright__text">
+                        <p>
+                            This website is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by Reneta Elza
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const productList = document.getElementById('product-list');
+            const categoryDropdown = document.querySelector('.details-dropdown ul');
+            const searchForm = document.querySelector('.shop__sidebar__search form');
+            const paginationContainer = document.querySelector('.product__pagination');
+            const productRange = document.getElementById('product-range');
+            const totalProductsElement = document.getElementById('total-products');
+            const token = localStorage.getItem('token'); // Ambil token dari localStorage
+
+            let currentPage = 1;
+            const productsPerPage = 12;
+
+            // Fungsi untuk memeriksa keberadaan token
+            function checkLogin() {
+                if (!token) {
+                    showPopup(); // Jika tidak ada token, tampilkan pop-up login
+                }
+            }
+
+            // Fungsi untuk menampilkan pop-up login
+            function showPopup() {
+                document.querySelector('.popup-overlay').style.display = 'block';
+            }
+
+            // Event listener untuk tombol pop-up
+            document.querySelector('.btn-cancel').addEventListener('click', closePopup);
+            document.querySelector('.btn-login').addEventListener('click', () => {
+                window.location.href = 'login.html';
+            });
+
+            // Fungsi untuk menutup pop-up
+            function closePopup() {
+                document.querySelector('.popup-overlay').style.display = 'none';
+            }
+
+            // Fungsi untuk mengambil data produk dari API
+            async function fetchProducts(category = 'All', searchQuery = '', page = 1) {
+                try {
+                    const response = await fetch('http://localhost:3000/api/products');
+                    const products = await response.json();
+
+                    let filteredProducts = products;
+
+                    if (category !== 'All') {
+                        filteredProducts = filteredProducts.filter(product =>
+                            product.product_category.toLowerCase() === category.toLowerCase()
+                        );
+                    }
+
+                    if (searchQuery) {
+                        filteredProducts = filteredProducts.filter(product =>
+                            product.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+                        );
+                    }
+
+                    const totalProducts = filteredProducts.length;
+                    totalProductsElement.textContent = totalProducts;
+                    const totalPages = Math.ceil(totalProducts / productsPerPage);
+                    const startIndex = (page - 1) * productsPerPage;
+                    const endIndex = startIndex + productsPerPage;
+                    const productsToDisplay = filteredProducts.slice(startIndex, endIndex);
+
+                    productRange.textContent = productsToDisplay.length;
+
+                    displayProducts(productsToDisplay);
+                    createPagination(totalPages, page);
+                } catch (error) {
+                    console.error('Error fetching products:', error);
+                }
+            }
+
+            // Fungsi untuk menampilkan produk
+            function displayProducts(products) {
+                productList.innerHTML = '';
+
+                if (products.length === 0) {
+                    productList.innerHTML = '<p>No products found.</p>';
+                    return;
+                }
+
+                products.forEach(product => {
+                    const productHTML = `
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg"
+                            style="background-image: url('img/product/${product.product_image}');">
+                        </div>
+                        <div class="product__item__text">
+                            <h6>${product.product_name}</h6>
+                            <p>${product.product_description}</p>
+                            <h5>${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(product.product_price)}</h5>
+
+                            <button class="product__add-to-cart" style="background-color: #493628; padding:5px"
+                                data-id="${product.product_id}"
+                                data-name="${product.product_name}"
+                                data-image="${product.product_image}"
+                                data-price="${product.product_price}">
+                                Add to Cart
+                            </button>
+
+                        </div>
+                    </div>
+                </div>`;
+                    productList.insertAdjacentHTML('beforeend', productHTML);
+                });
+
+                // Add event listener for add to cart button
+                document.querySelectorAll('.product__add-to-cart').forEach(button => {
+                    button.addEventListener('click', addToCart);
+                });
+            }
+
+            // Fungsi untuk menambahkan produk ke keranjang
+            function addToCart(event) {
+                const product = event.target;
+
+                if (!token) {
+                    showPopup(); // Menampilkan modal pop-up jika belum login
+                    return;
+                }
+
+                const productId = product.getAttribute('data-id');
+                const productName = product.getAttribute('data-name');
+                const productImage = product.getAttribute('data-image');
+                const productPrice = parseFloat(product.getAttribute('data-price'));
+
+                fetch('http://localhost:3000/api/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        product_name: productName,
+                        product_image: productImage,
+                        product_price: productPrice,
+                        product_quantity: 1,
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Product added to cart!');
+                            window.location.href = 'shopping-cart.html';
+                        } else {
+                            return response.json().then(data => {
+                                throw new Error(data.message || 'Failed to add product to cart');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert('An error occurred. Please try again.');
+                    });
+            }
+
+            // Fungsi untuk membuat tombol pagination
+            function createPagination(totalPages, currentPage) {
+                paginationContainer.innerHTML = '';
+
+                for (let page = 1; page <= totalPages; page++) {
+                    const pageButton = document.createElement('a');
+                    pageButton.href = '#';
+                    pageButton.textContent = page;
+                    pageButton.classList.add('page-btn');
+                    if (page === currentPage) {
+                        pageButton.classList.add('active');
+                    }
+
+                    pageButton.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fetchProducts(
+                            document.querySelector('.details-dropdown .active')?.getAttribute('data-category') || 'All',
+                            searchForm.keyword.value.trim(),
+                            page
+                        );
+                    });
+
+                    paginationContainer.appendChild(pageButton);
+                }
+            }
+
+            categoryDropdown.addEventListener('click', event => {
+                const target = event.target;
+                if (target.tagName === 'A') {
+                    event.preventDefault();
+                    const selectedCategory = target.getAttribute('data-category') || 'All';
+
+                    document.querySelectorAll('.details-dropdown a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    target.classList.add('active');
+
+                    fetchProducts(selectedCategory, searchForm.keyword.value.trim(), 1);
+                }
+            });
+
+            searchForm.addEventListener('submit', event => {
+                event.preventDefault();
+                const searchQuery = searchForm.keyword.value.trim();
+                const selectedCategory = document.querySelector('.details-dropdown .active')?.getAttribute('data-category') || 'All';
+                fetchProducts(selectedCategory, searchQuery, 1);
+            });
+
+            fetchProducts();
+        });
+    </script>
+
+</body>
+
+</html>

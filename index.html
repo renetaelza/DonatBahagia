@@ -49,7 +49,6 @@
                         <ul>
                             <li><a href="../index.html" class="nav-link">Home</a></li>
                             <li><a href="../shop.html" class="nav-link">Shop</a></li>
-                            <li><a href="../about.html" class="nav-link">About Us</a></li>
                             <li><a href="../contact.html" class="nav-link">Contact</a></li>
                         </ul>
                     </nav>
@@ -141,19 +140,19 @@
         </div>
         <div class="latar2">
             <div class="gallery">
-                <div class="imageC">
+                <div class="imageC" onclick="navigateToCategory('Package')">
                     <img src="img/package.jpg" alt="Picture 1">
                     <p>Package</p>
                 </div>
-                <div class="imageC">
+                <div class="imageC" onclick="navigateToCategory('Milky Cream')">
                     <img src="img/milkycream.jpg" alt="Picture 2">
                     <p>Milky Cream</p>
                 </div>
-                <div class="imageC">
+                <div class="imageC" onclick="navigateToCategory('Classic')">
                     <img src="img/klasik.jpg" alt="Picture 3">
                     <p>Classic</p>
                 </div>
-                <div class="imageC">
+                <div class="imageC" onclick="navigateToCategory('Ring N Fill')">
                     <img src="img/ringnfill.jpg" alt="Picture 4">
                     <p>Ring N Fill</p>
                 </div>
@@ -162,26 +161,120 @@
     </div>
     <!-- Category Section End -->
 
+    <script>
+        function navigateToCategory(category) {
+            window.location.href = `shop.html?category=${encodeURIComponent(category)}`;
+        }
+    </script>
+
+    <!-- Location Section Begin -->
+    <section class="team spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>Informasi Outlet</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item">
+                        <div class="imageL">
+                            <a href="https://maps.app.goo.gl/X4zYhaZW1Ry4cMgm6?g_st=iw" target="_blank"><img
+                                    src="img/location/maskumambang.png" alt=""></a>
+                        </div>
+                        <h4>Bandung, Maskumambang</h4>
+                        <span>Jl. Maskumambang No. 25, Trunojoyo, Kec.Lengkong, Kota Bandung</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item">
+                        <div class="imageL">
+                            <a href="https://www.google.com/maps/place/Donat+Bahagia/@-6.8889209,107.627895,17.08z/data=!4m6!3m5!1s0x2e68e7c913725e39:0xb35aba3c7b41df8c!8m2!3d-6.8888694!4d107.6277308!16s%2Fg%2F11cncny364"
+                                target="_blank">
+                                <img src="img/location/cibeunying.png" alt="Bandung, Cibeunying">
+                            </a>
+                        </div>
+                        <h4>Bandung, Cibeunying</h4>
+                        <span>Jl. Cibeunying Kolot No.67, Sadang Serang, Kec. Coblong, Kota Bandung Selatan.</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item">
+                        <div class="imageL">
+                            <a href="https://goo.gl/maps/tRThTyMRCY1jk1GM6" target="_blank"><img
+                                    src="img/location/bintaro.png" alt=""></a>
+                        </div>
+                        <h4>Tangsel, Bintaro</h4>
+                        <span>Jl. Emeralad Boulevard, Parigi, Kec. Pd. Aren, Kota Tangerang Selatan, Banten</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item">
+                        <div class="imageL">
+                            <a href="https://goo.gl/maps/KLuiMGxET25L2Qco6" target="_blank"><img
+                                    src="img/location/surabaya.png" alt=""></a>
+                        </div>
+                        <h4>Surabaya</h4>
+                        <span>Ruko North Junction Citraland Blok RB 18, Kec. Sambikerep, Surabaya</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item">
+                        <div class="imageL">
+                            <a href="https://g.co/kgs/fmZWGB" target="_blank"><img src="img/location/cipete.png"
+                                    alt=""></a>
+                        </div>
+                        <h4>Jaksel, Cipete</h4>
+                        <span>Jl. Cipete Dalam No. 37, Kec. Cilandak, Jakarta Selatan</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item">
+                        <div class="imageL">
+                            <a href="https://maps.app.goo.gl/i7QsJWuyHY5ifEEg9" target="_blank"><img
+                                    src="img/location/bekasi.png" alt=""></a>
+                        </div>
+                        <h4>Bekasi</h4>
+                        <span>Jl. Rukan Sentra Niaga 7 No. 11, Kec. Bekasi Selatan, Bekasi</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="team__item">
+                        <div class="imageL">
+                            <a href="https://maps.app.goo.gl/9vxSVtKCaipqvdzs9?g_st=iw" target="_blank"><img
+                                    src="img/location/bogor.png" alt=""></a>
+                        </div>
+                        <h4>Bogor</h4>
+                        <span>Jl. Malabar 1 No. 12, Kec. Bogor Tengah, Bogor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Location Section End -->
+
     <!-- Instagram Section Begin -->
     <section class="instagram spad">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
                     <div class="instagram__pic">
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/ig1.png"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/ig2.png"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/ig3.png"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/ig4.png"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/ig5.png"></div>
-                        <div class="instagram__pic__item set-bg" data-setbg="img/instagram/ig6.png"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="img/ig/1.png"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="img/ig/2.png"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="img/ig/3.png"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="img/ig/4.png"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="img/ig/5.png"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="img/ig/6.png"></div>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="instagram__text">
                         <h2>Instagram</h2>
-                        <p>Kunjungi instagram kami untuk mendapatkan info dan promo Jatinangor House.</p>
+                        <p>Kunjungi instagram kami untuk mendapatkan info dan promo Donat Bahagia.</p>
                         <div>
-                            <a href="https://www.instagram.com/jatinangorhouse/" class="primary-btn"
+                            <a href="https://www.instagram.com/officialdonat_bahagia/" class="primary-btn"
                                 style="margin-bottom: 10px;">Instagram</a>
                         </div>
                     </div>

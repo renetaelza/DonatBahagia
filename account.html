@@ -49,7 +49,6 @@
                         <ul>
                             <li><a href=" ../index.html">Home</a></li>
                             <li><a href=" ../shop.html">Shop</a></li>
-                            <li><a href=" ../about.html">About</a></li>
                             <li><a href=" ../contact.html">Contact Us</a></li>
                         </ul>
                     </nav>
@@ -88,7 +87,7 @@
     </section>
     <!-- Breadcrumb Section End -->
 
-    <!-- Checkout Section Begin -->
+    <!-- Account Section Begin -->
     <section class="checkout spad" style="margin-top: -90px;">
         <div class="container">
             <div class="checkout__form">
@@ -106,7 +105,11 @@
 
                                 </div>
                                 <h4 class="order__title"></h4>
+                                <div class="d-flex justify-content-center">
 
+                                    <a href="javascript:void(0);" id="logout-btn" class="btn btn-danger"
+                                        style="margin-top: 20px;">LOG OUT</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -114,7 +117,42 @@
             </div>
         </div>
     </section>
-    <!-- Checkout Section End -->
+    <!-- Account Section End -->
+
+    <!-- Order History Begin -->
+    <section id="orders" class="shopping-cart spad" style="margin-top: -120px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <br>
+                        <h2>Riwayat Pesanan</h2>
+                    </div>
+                    <div class="shopping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Tanggal Pesan</th>
+                                    <th>Produk</th>
+                                    <th>Total Harga</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <!-- Orders will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                        <div id="no-orders-message"
+                            style="display: none; text-align: center; padding: 20px; color: gray;">
+                            Tidak ada riwayat pesanan.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Order History End -->
 
     <footer class="footer">
         <div class="container">
@@ -172,22 +210,23 @@
     </footer>
     <!-- Footer Section End -->
 
-    <!-- Modal Popup untuk Konfirmasi Logout -->
-    <div class="modal" tabindex="-1" role="dialog" id="logoutModal">
+    <!-- Tombol Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Konfirmasi Logout</h5>
+                    <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Apakah Anda yakin ingin logout?</p>
+                    Apakah Anda yakin ingin logout?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirm-logout">Logout</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">Logout</button>
                 </div>
             </div>
         </div>
@@ -207,14 +246,17 @@
         document.addEventListener("DOMContentLoaded", async () => {
             const userInfoDiv = document.getElementById("user-info");
             const logoutBtn = document.getElementById("logout-btn");
+            const confirmLogoutBtn = document.getElementById("confirmLogout");
+            const ordersTableBody = document.querySelector("#orders tbody");
+            const ordersSection = document.getElementById("orders");
             const token = localStorage.getItem("token");
-            const logoutModal = document.getElementById("logoutModal");
-            const confirmLogoutBtn = document.getElementById("confirm-logout");
 
-            // Jika tidak ada token, berarti pengguna belum login
+            // Cek jika token tidak ada, arahkan pengguna ke login
             if (!token) {
                 userInfoDiv.innerHTML = `
             <p style="color: red;">Anda belum login. Silakan <a href="login.html">login</a> terlebih dahulu.</p>`;
+                logoutBtn.style.display = 'none';
+                ordersSection.style.display = 'none';
                 return;
             }
 
@@ -234,14 +276,11 @@
                 <p><strong>Nama:</strong> ${userData.name}</p>
                 <p><strong>Alamat:</strong> ${userData.address || 'Belum diatur'}</p>
                 <p><strong>Email:</strong> ${userData.email}</p>
-                <p><strong>Telepon:</strong> ${userData.phone || 'Belum diatur'}</p>
-                <a style="margin-left: 150px;" href="javascript:void(0);" id="logout-btn"
-                                            class="btn btn-danger">LOG OUT</a>
-            `;
+                <p><strong>Telepon:</strong> ${userData.phone || 'Belum diatur'}</p>`;
                 } else if (response.status === 401) {
                     userInfoDiv.innerHTML = `
                 <p style="color: red;">Sesi Anda telah kedaluwarsa. Silakan <a href="login.html">login</a> kembali.</p>`;
-                    localStorage.removeItem("token"); // Menghapus token jika sesi kedaluwarsa
+                    localStorage.removeItem("token");
                 } else {
                     userInfoDiv.innerHTML = `<p style="color: red;">Gagal memuat data pengguna. Coba lagi nanti.</p>`;
                 }
@@ -249,19 +288,97 @@
                 userInfoDiv.innerHTML = `<p style="color: red;">Terjadi kesalahan. Coba lagi nanti.</p>`;
             }
 
-            // Menampilkan modal konfirmasi logout saat tombol logout ditekan
+            // Mendapatkan riwayat pesanan dari API
+            try {
+                const orderResponse = await fetch('/api/orders/history', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (orderResponse.ok) {
+                    const orders = await orderResponse.json();
+
+                    if (orders.length > 0) {
+                        orders.forEach(order => {
+                            order.products.forEach(product => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__text">
+                                    <h6>${order.order_id}</h6>
+                                </div>
+                            </td>
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__text">
+                                    ${new Date(order.order_date).toLocaleDateString()}
+                                </div>
+                            </td>
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__text">
+                                    <img src="/img/product/${product.product_image}" alt="${product.product_name}" class="product-image">
+                                    <span>${product.product_name}</span>
+                                </div>
+                            </td>
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__text">
+                                    ${order.order_cost}
+                                </div>
+                            </td>
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__text">
+                                    <h6>${order.order_status}</h6>
+                                </div>
+                            </td>
+                        `;
+                                ordersTableBody.appendChild(row);
+                            });
+                        });
+                    } else {
+                        ordersTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Tidak ada riwayat pesanan</td></tr>`;
+                    }
+                } else {
+                    ordersTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Gagal memuat riwayat pesanan. Coba lagi nanti.</td></tr>`;
+                }
+            } catch (error) {
+                ordersTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Terjadi kesalahan. Coba lagi nanti.</td></tr>`;
+            }
+
+            // Tombol Logout menampilkan modal
             logoutBtn.addEventListener("click", () => {
-                $('#logoutModal').modal('show'); // Menampilkan modal popup
+                $('#logoutModal').modal('show');
             });
 
-            // Jika pengguna mengonfirmasi logout
+            // Tombol Konfirmasi Logout
             confirmLogoutBtn.addEventListener("click", () => {
-                localStorage.removeItem("token"); // Menghapus token dari localStorage
-                window.location.href = "login.html"; // Arahkan pengguna ke halaman login
+                localStorage.removeItem("token");
+                window.location.href = "login.html";
             });
         });
 
     </script>
+
+    <style>
+        .product-image {
+            width: 100px;
+            /* Set the size of the image */
+            height: 100px;
+            /* Set the height of the image */
+            object-fit: cover;
+            /* Ensure image maintains aspect ratio */
+            border-radius: 8px;
+            /* Add rounded corners to the image */
+            margin-right: 10px;
+            /* Add space between image and text */
+        }
+
+        .product__cart__item__text span {
+            vertical-align: middle;
+            /* Align text with the image */
+        }
+    </style>
 </body>
 
 </html>

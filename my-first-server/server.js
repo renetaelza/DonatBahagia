@@ -40,7 +40,8 @@ app.use('/api/auth', authRoutes); // Menambahkan prefix /api/auth untuk route au
 app.use('/protected', protectedRoutes);
 
 const User = require('./models/User');
-const Cart = require('./models/Cart'); // Tambahkan ini
+const Cart = require('./models/Cart');
+const Order = require('./models/Order');
 const authMiddleware = require('./middlewares/authMiddleware');
 
 // Rute untuk mendapatkan data pengguna yang sedang login
@@ -98,5 +99,83 @@ app.post('/api/cart', authMiddleware, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error.', error: err.message });
+  }
+});
+
+app.post('/api/checkout', async (req, res) => {
+    const { order_cost, user_id, user_phone, user_address, user_city, products } = req.body;
+
+    try {
+        // Cek jika semua field ada
+        if (!order_cost || !user_id || !user_phone || !user_address || !user_city || !products) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        // Generate order_id incrementally
+        const lastOrder = await Order.findOne().sort({ order_id: -1 }).limit(1); // Ambil order_id terakhir
+        const newOrderId = lastOrder ? lastOrder.order_id + 1 : 1; // Increment order_id
+
+        // Menambahkan order_date
+        const orderDate = new Date().toISOString();
+
+        // Buat objek order baru
+        const newOrder = new Order({
+            order_id: newOrderId,
+            order_date: orderDate,
+            order_cost: order_cost,
+            order_status: 'Paid', // Atur status default menjadi 'Paid'
+            user_id: user_id, // Simpan user_id langsung dari request body
+            user_phone: user_phone,
+            user_address: user_address,
+            user_city: user_city,
+            products: products // Produk dikirimkan langsung dalam request body
+        });
+
+        // Simpan order ke database
+        await newOrder.save();
+
+        // Kirim response sukses
+        res.status(201).json({ message: 'Order placed successfully', order: newOrder });
+
+    } catch (error) {
+        console.error('Error placing order:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.get('/api/orders/history', authMiddleware, async (req, res) => {
+  try {
+    // Find user by ID, excluding password field
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Fetch orders for the user and sort by order date (most recent first)
+    const orders = await Order.find({ user_id: user._id }).sort({ order_date: -1 });
+
+    // Check if the user has any orders
+    if (orders.length === 0) {
+      return res.status(200).json({ message: 'No orders found for this user.' });
+    }
+
+    // Prepare the order data to send back
+    const orderHistory = orders.map(order => ({
+      order_id: order.order_id,
+      order_date: order.order_date,
+      products: order.products.map(product => ({
+        product_name: product.product_name,
+        product_image: product.product_image,
+        product_price: product.product_price,
+        product_quantity: product.product_quantity,
+      })),
+      order_cost: order.order_cost,
+      order_status: order.order_status,
+    }));
+
+    // Send the order history back in the response
+    res.json(orderHistory);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });

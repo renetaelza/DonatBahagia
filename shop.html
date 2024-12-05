@@ -98,7 +98,6 @@
                         <ul>
                             <li><a href=" ../index.html"></a> Home</li>
                             <li><a href=" ../shop.html"></a> Shop</li>
-                            <li><a href=" ../about.html"></a> About</li>
                             <li><a href=" ../contact.html"></a> Contact Us</li>
                         </ul>
                     </nav>
@@ -352,7 +351,6 @@
                                 data-price="${product.product_price}">
                                 Add to Cart
                             </button>
-
                         </div>
                     </div>
                 </div>`;
@@ -379,86 +377,157 @@
                 const productImage = product.getAttribute('data-image');
                 const productPrice = parseFloat(product.getAttribute('data-price'));
 
-                fetch('http://localhost:3000/api/cart', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                // Periksa apakah produk sudah ada di keranjang
+                const existingProduct = cart.find(item => item.product_id === productId);
+
+                if (existingProduct) {
+                    // Jika produk sudah ada, perbarui kuantitasnya
+                    existingProduct.product_quantity += 1;
+                } else {
+                    // Jika produk belum ada, tambahkan sebagai produk baru
+                    cart.push({
                         product_id: productId,
                         product_name: productName,
                         product_image: productImage,
                         product_price: productPrice,
                         product_quantity: 1,
-                    })
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Product added to cart!');
-                            window.location.href = 'shopping-cart.html';
-                        } else {
-                            return response.json().then(data => {
-                                throw new Error(data.message || 'Failed to add product to cart');
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert('An error occurred. Please try again.');
                     });
+                }
+
+                // Simpan kembali ke localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Notifikasi atau refresh tampilan keranjang
+                alert('Product added to cart!');
+                window.location.href = 'shopping-cart.html';
+                displayCartItems(); // Perbarui tampilan keranjang (jika perlu)
             }
 
-            // Fungsi untuk membuat tombol pagination
+            // Fungsi untuk menampilkan item di keranjang
+            function displayCartItems() {
+                const cartItemsContainer = document.getElementById('cart_items');
+                const totalPaymentElement = document.getElementById('total_payment');
+                const finalTotalElement = document.getElementById('final_total');
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let totalPrice = 0;
+
+                cartItemsContainer.innerHTML = ''; // Hapus item sebelumnya
+
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<tr><td colspan="4">Your cart is empty!</td></tr>';
+                    return;
+                }
+
+                // Loop melalui setiap item dalam keranjang
+                cart.forEach(item => {
+                    const rowHTML = `
+                <tr>
+                    <td class="shopping__product">
+                        <img src="img/product/${item.product_image}" alt="${item.product_name}" style="width: 50px;">
+                        ${item.product_name}
+                    </td>
+                    <td class="shopping__quantity">
+                        <input 
+                            type="number" 
+                            min="1" 
+                            value="${item.product_quantity}" 
+                            onchange="updateQuantity('${item.product_id}', this.value)"
+                            class="quantity_input"
+                            style="width: 50px;"
+                        />
+                    </td>
+                    <td class="shopping__price">${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(item.product_price * item.product_quantity)}</td>
+                    <td class="shopping__action">
+                        <button onclick="removeFromCart('${item.product_id}')" class="btn btn-danger">Remove</button>
+                    </td>
+                </tr>`;
+                    cartItemsContainer.insertAdjacentHTML('beforeend', rowHTML);
+
+                    // Hitung total harga
+                    totalPrice += item.product_price * item.product_quantity;
+                });
+
+                // Tampilkan total pembayaran
+                totalPaymentElement.textContent = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+                finalTotalElement.textContent = `Rp ${(totalPrice + 20000).toLocaleString('id-ID')}`; // Tambahkan ongkir
+            }
+
+            // Fungsi untuk memperbarui kuantitas produk
+            function updateQuantity(productId, newQuantity) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                newQuantity = parseInt(newQuantity);
+
+                if (newQuantity < 1) {
+                    alert('Quantity cannot be less than 1');
+                    return;
+                }
+
+                // Cari produk dalam keranjang dan perbarui kuantitasnya
+                cart = cart.map(item => {
+                    if (item.product_id === productId) {
+                        item.product_quantity = newQuantity;
+                    }
+                    return item;
+                });
+
+                // Simpan kembali ke localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Refresh keranjang
+                displayCartItems();
+            }
+
+            // Fungsi untuk menghapus produk dari keranjang
+            function removeFromCart(productId) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart = cart.filter(item => item.product_id !== productId);
+
+                // Simpan perubahan ke localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Refresh tampilan keranjang
+                displayCartItems();
+            }
+
+            // Event listener untuk pencarian produk
+            searchForm.addEventListener('submit', event => {
+                event.preventDefault();
+                const searchQuery = event.target.querySelector('input').value;
+                fetchProducts('All', searchQuery, currentPage);
+            });
+
+            // Event listener untuk kategori dropdown
+            categoryDropdown.addEventListener('click', event => {
+                const category = event.target.textContent;
+                fetchProducts(category, '', currentPage);
+            });
+
+            // Fungsi untuk membuat pagination
             function createPagination(totalPages, currentPage) {
                 paginationContainer.innerHTML = '';
-
-                for (let page = 1; page <= totalPages; page++) {
-                    const pageButton = document.createElement('a');
-                    pageButton.href = '#';
-                    pageButton.textContent = page;
-                    pageButton.classList.add('page-btn');
-                    if (page === currentPage) {
-                        pageButton.classList.add('active');
-                    }
-
-                    pageButton.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        fetchProducts(
-                            document.querySelector('.details-dropdown .active')?.getAttribute('data-category') || 'All',
-                            searchForm.keyword.value.trim(),
-                            page
-                        );
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.addEventListener('click', () => {
+                        currentPage = i;
+                        fetchProducts('All', '', currentPage);
                     });
-
                     paginationContainer.appendChild(pageButton);
                 }
             }
 
-            categoryDropdown.addEventListener('click', event => {
-                const target = event.target;
-                if (target.tagName === 'A') {
-                    event.preventDefault();
-                    const selectedCategory = target.getAttribute('data-category') || 'All';
-
-                    document.querySelectorAll('.details-dropdown a').forEach(link => {
-                        link.classList.remove('active');
-                    });
-                    target.classList.add('active');
-
-                    fetchProducts(selectedCategory, searchForm.keyword.value.trim(), 1);
-                }
+            // Event listener untuk tombol add to cart
+            document.querySelectorAll('.product__add-to-cart').forEach(button => {
+                button.addEventListener('click', addToCart);
             });
 
-            searchForm.addEventListener('submit', event => {
-                event.preventDefault();
-                const searchQuery = searchForm.keyword.value.trim();
-                const selectedCategory = document.querySelector('.details-dropdown .active')?.getAttribute('data-category') || 'All';
-                fetchProducts(selectedCategory, searchQuery, 1);
-            });
-
-            fetchProducts();
+            // Fetch data awal untuk kategori "All"
+            fetchProducts('All', '', currentPage);
+            checkLogin(); // Memeriksa status login
         });
+
     </script>
 
 </body>

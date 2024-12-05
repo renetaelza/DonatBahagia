@@ -72,6 +72,18 @@ body {
 	border-color: #FFF0D1;
 	/* Change border color on hover */
 }
+
+.imageL img {
+	border-radius: 10px;
+	border: 3px solid transparent;
+	transition: border-color 0.3s ease;
+	cursor: pointer;
+}
+
+.imageL img:hover {
+	border-color: #674636;
+	/* Change border color on hover */
+}
 /* Text below image */
 .imageC p {
 	margin: 10px 0 0;
@@ -172,7 +184,7 @@ a.button {
   }
   
   .details-dropdown ul li a:hover {
-	background-color: #3AD4D5;
+	background-color: #674636;
 	color: white;
   }
   
@@ -459,7 +471,7 @@ color: #999;
 	text-transform: uppercase;
 	padding: 10px 5px;
 	color: #ffffff;
-	background: #3AD4D5;
+	background: #674636;
 	letter-spacing: 4px;
 }
 
@@ -1062,7 +1074,7 @@ color: #999;
 -----------------------*/
 
 .categories {
-	background: #3AD4D5;
+	background: #674636;
 	overflow: hidden;
 	padding-top: 100px;
 	padding-bottom: 105px;

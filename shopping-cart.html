@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="css/style.css" type="text/css">
 
     <link rel="icon" href="img/icon/dobah.png" type="image/png">
+
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 </head>
 
 <body>
@@ -49,7 +51,6 @@
                         <ul>
                             <li><a href=" ../index.html"></a> Home</li>
                             <li><a href=" ../shop.html"></a> Shop</li>
-                            <li><a href=" ../about.html"></a> About</li>
                             <li><a href=" ../contact.html"></a> Contact Us</li>
                         </ul>
                     </nav>
@@ -77,8 +78,10 @@
                             <h4>Shopping Cart</h4>
                             <div class="breadcrumb__links">
                                 <a href="index.html">Home</a>
-                                <a href="shop.html"> > </a>
-                                <span>Shop</span>
+                                <a href=""> ></a>
+                                <a href="shop.html">Shop</a>
+                                <a href=""> ></a>
+                                <span>Shopping Cart</span>
                             </div>
                         </div>
                     </div>
@@ -113,7 +116,7 @@
                             <div class="continue__btn">
                                 <a href="shop.html"
                                     style="background-color: #493628; margin:5px; padding: 10px 80px 10px;"
-                                    class="btn btn-info">Continue Shopping <i
+                                    class="btn btn-secondary">Continue Shopping <i
                                         class="fa fa-arrow-circle-o-right fa-lg"></i></a>
                             </div>
                         </div>
@@ -129,10 +132,12 @@
                             <li style="margin-top: 20px; font-weight: 1000;">Total Pembayaran <span id="final_total">Rp
                                     0</span></li>
                         </ul>
-                        <form id="checkout_form" method="POST" action="checkout.html">
-                            <input style="background-color: #493628; margin:5px; padding: 10px 80px 10px;" type="submit"
-                                class="btn btn-info" value="Checkout" name="checkout">
-                        </form>
+                        <input id="checkout_button"
+                            style="background-color: #493628; margin:5px; padding: 10px 80px 10px;" type="button"
+                            class="btn btn-secondary" value="Checkout" onclick="checkout()" />
+                        <script>// Panggil fungsi checkout ketika tombol diklik
+                            document.getElementById('checkout_button').addEventListener('click', checkout);
+                        </script>
                     </div>
                 </div>
             </div>
@@ -195,6 +200,8 @@
         </div>
     </footer>
     <!-- Footer Section End -->
+
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 
     <script>
         // Fungsi untuk menambahkan produk ke keranjang
@@ -269,6 +276,7 @@
             finalTotalElement.textContent = `Rp ${(totalPrice + 20000).toLocaleString('id-ID')}`; // Tambahkan ongkir
         }
 
+
         // Fungsi untuk memperbarui kuantitas produk
         function updateQuantity(productId, newQuantity) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -308,6 +316,101 @@
 
         // Panggil fungsi untuk menampilkan item saat halaman dimuat
         document.addEventListener('DOMContentLoaded', displayCartItems);
+
+        function checkout() {
+            // Ambil data dari keranjang
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('You must be logged in to checkout!');
+                window.location.href = 'login.html'; // Arahkan pengguna ke halaman login jika belum login
+                return;
+            }
+
+            // Ambil data pengguna dari API berdasarkan token
+            fetch('/api/user/profile', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+                .then(response => response.json())
+                .then(userData => {
+                    if (!userData || !userData.email) {
+                        alert('Failed to retrieve user data.');
+                        return;
+                    }
+
+                    // Proses checkout dengan data pengguna
+                    proceedCheckout(userData, cart);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    alert('Failed to fetch user data. Please try again later.');
+                });
+        }
+
+        // Fungsi untuk melanjutkan checkout
+        function proceedCheckout(userData, cart) {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            // Hitung total biaya
+            let totalCost = 0;
+            cart.forEach(item => {
+                totalCost += item.product_price * item.product_quantity;
+            });
+
+            // Menambahkan ongkos kirim
+            const shippingCost = 20000;
+            const orderCost = totalCost + shippingCost;
+
+            // Siapkan objek data yang akan dikirim ke server
+            const orderData = {
+                order_cost: orderCost,
+                user_id: userData._id,
+                user_phone: userData.phone,
+                user_address: userData.address,
+                user_city: userData.city,
+                products: cart.map(item => ({
+                    product_id: item.product_id,
+                    product_name: item.product_name,
+                    product_image: item.product_image,
+                    product_price: item.product_price,
+                    product_quantity: item.product_quantity
+                }))
+            };
+
+            // Kirim request ke API untuk proses checkout
+            fetch('/api/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Order placed successfully') {
+                        alert('Your order has been placed successfully!');
+                        // Setelah checkout, kosongkan keranjang
+                        localStorage.removeItem('cart');
+                        // Redirect atau tampilkan halaman lain
+                        window.location.href = '/account.html'; // Ganti dengan URL halaman sukses
+                    } else {
+                        alert('There was an issue placing your order. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during checkout:', error);
+                    alert('There was an error processing your request. Please try again.');
+                });
+        }
 
     </script>
 </body>

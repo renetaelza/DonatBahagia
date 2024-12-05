@@ -1,10 +1,9 @@
+const dotenv = require('dotenv');
+dotenv.config();
 require('./db');
 const express = require('express');
-const dotenv = require('dotenv');
 const path = require('path');
-const PORT = 3000;
-
-dotenv.config();
+const PORT = process.env.PORT;
 
 const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protected')
